@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lyyu1\\onedrive\\desktop\\code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\TechSupportSystemApp.csproj": {}
+    "C:\\Users\\lyyu1\\OneDrive\\Desktop\\Code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\TechSupportSystemApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lyyu1\\onedrive\\desktop\\code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\TechSupportSystemApp.csproj": {
+    "C:\\Users\\lyyu1\\OneDrive\\Desktop\\Code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\TechSupportSystemApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lyyu1\\onedrive\\desktop\\code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\TechSupportSystemApp.csproj",
+        "projectUniqueName": "C:\\Users\\lyyu1\\OneDrive\\Desktop\\Code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\TechSupportSystemApp.csproj",
         "projectName": "TechSupportSystemApp",
-        "projectPath": "C:\\Users\\lyyu1\\onedrive\\desktop\\code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\TechSupportSystemApp.csproj",
+        "projectPath": "C:\\Users\\lyyu1\\OneDrive\\Desktop\\Code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\TechSupportSystemApp.csproj",
         "packagesPath": "C:\\Users\\lyyu1\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lyyu1\\onedrive\\desktop\\code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\obj\\",
+        "outputPath": "C:\\Users\\lyyu1\\OneDrive\\Desktop\\Code\\net\\TechSupportSystemApp\\TechSupportSystemApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lyyu1\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -47,6 +47,28 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[10.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[10.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[10.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.7, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[10.1.7, )"
             }
           },
           "imports": [
