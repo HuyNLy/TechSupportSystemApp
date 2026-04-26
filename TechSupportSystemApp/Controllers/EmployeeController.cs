@@ -35,7 +35,7 @@ public class EmployeeController : ControllerBase
     {
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, employee);
+        return CreatedAtAction(nameof(GetEmployee), new { id = employee.eId }, employee);
     }
 
     [HttpDelete("{id}")]

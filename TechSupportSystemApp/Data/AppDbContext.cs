@@ -33,13 +33,13 @@ public class AppDbContext : DbContext
     // -------------------------
 
     modelBuilder.Entity<Employee>().HasData(
-        new Employee { Id = 1, Name = "Alice" },
-        new Employee { Id = 2, Name = "Bob" }
+        new Employee { eId = 1, eName = "Alice" },
+        new Employee { eId = 2, eName = "Bob" }
     );
 
     modelBuilder.Entity<Category>().HasData(
-        new Category { Id = 1, Name = "Hardware" },
-        new Category { Id = 2, Name = "Software" }
+        new Category { catId = 1, catName = "Hardware" },
+        new Category { catId = 2, catName = "Software" }
     );
 }
 

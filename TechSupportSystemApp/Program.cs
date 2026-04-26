@@ -1,5 +1,8 @@
 using TechSupportSystemApp.Data;
+using TechSupportSystemApp.Services.Interfaces;
+using TechSupportSystemApp.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +16,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register services
-builder.Services.AddScoped<TechSupportSystemApp.Services.Interfaces.IEmployeeService, TechSupportSystemApp
-.Services.Implementations.EmployeeService>();
-builder.Services.AddScoped<TechSupportSystemApp.Services.Interfaces.ITicketService, TechSupportSystemApp
-.Services.Implementations.TicketService>();
-builder.Services.AddScoped<TechSupportSystemApp.Services.Interfaces.ICategoryService, TechSupportSystemApp
-.Services.Implementations.CategoryService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddScoped<ITicketRepo, TicketRepo>();
 

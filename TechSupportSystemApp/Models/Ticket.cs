@@ -4,14 +4,15 @@ namespace TechSupportSystemApp.Models;
 
 public class Ticket
 {
-    public int Id { get; set; }
+    [Key]
+    public int ticketId { get; set; }
 
     [Required]
     [MaxLength(200)]
-    public string Title { get; set; } = string.Empty;
+    public string ticketTitle { get; set; } = string.Empty;
 
     [MaxLength(500)]
-    public string Description { get; set; } = string.Empty;
+    public string ticketDescription { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
@@ -19,6 +20,6 @@ public class Ticket
     public int EmployeeId { get; set; }
     public Employee Employee { get; set; }
 
-    // M-M relationship (never mark as [Required])
+    // M-M relationship 
     public List<Category> Categories { get; set; } = new();
 }

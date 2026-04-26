@@ -5,10 +5,10 @@ namespace TechSupportSystemApp.Models;
 public class Employee
 {
     [Key]
-    public int Id { get; set; }
+    public int eId { get; set; }
     [Required]
     [MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
+    public string eName { get; set; } = string.Empty;
 
 
     // 1-M relationship: One employee can submit many tickets

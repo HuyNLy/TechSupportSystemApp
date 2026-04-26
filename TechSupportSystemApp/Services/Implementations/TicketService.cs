@@ -29,8 +29,8 @@ public class TicketService : ITicketService
         // Map DTO → Model (trainer style)
         var ticket = new Ticket
         {
-            Title = dto.Title,
-            Description = dto.Description,
+            ticketTitle = dto.Title,
+            ticketDescription = dto.Description,
             EmployeeId = dto.EmployeeId
         };
 
