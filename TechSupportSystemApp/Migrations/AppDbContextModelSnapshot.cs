@@ -24,104 +24,104 @@ namespace TechSupportSystemApp.Migrations
 
             modelBuilder.Entity("CategoryTicket", b =>
                 {
-                    b.Property<int>("CategoriesId")
+                    b.Property<int>("CategoriesCatId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TicketsId")
+                    b.Property<int>("TicketsTicketId")
                         .HasColumnType("int");
 
-                    b.HasKey("CategoriesId", "TicketsId");
+                    b.HasKey("CategoriesCatId", "TicketsTicketId");
 
-                    b.HasIndex("TicketsId");
+                    b.HasIndex("TicketsTicketId");
 
                     b.ToTable("CategoryTicket");
                 });
 
             modelBuilder.Entity("TechSupportSystemApp.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CatId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CatId"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("CatName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CatId");
 
                     b.ToTable("Categories");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Name = "Hardware"
+                            CatId = 1,
+                            CatName = "Hardware"
                         },
                         new
                         {
-                            Id = 2,
-                            Name = "Software"
+                            CatId = 2,
+                            CatName = "Software"
                         });
                 });
 
             modelBuilder.Entity("TechSupportSystemApp.Models.Employee", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("EId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EId"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("EName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("EId");
 
                     b.ToTable("Employees");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Name = "Alice"
+                            EId = 1,
+                            EName = "Alice"
                         },
                         new
                         {
-                            Id = 2,
-                            Name = "Bob"
+                            EId = 2,
+                            EName = "Bob"
                         });
                 });
 
             modelBuilder.Entity("TechSupportSystemApp.Models.Ticket", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TicketId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TicketDescription")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("TicketTitle")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TicketId");
 
                     b.HasIndex("EmployeeId");
 
@@ -132,13 +132,13 @@ namespace TechSupportSystemApp.Migrations
                 {
                     b.HasOne("TechSupportSystemApp.Models.Category", null)
                         .WithMany()
-                        .HasForeignKey("CategoriesId")
+                        .HasForeignKey("CategoriesCatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TechSupportSystemApp.Models.Ticket", null)
                         .WithMany()
-                        .HasForeignKey("TicketsId")
+                        .HasForeignKey("TicketsTicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

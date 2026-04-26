@@ -25,7 +25,7 @@ public class TicketRepo : ITicketRepo
         return await _context.Tickets
             .Include(t => t.Employee)
             .Include(t => t.Categories)
-            .FirstOrDefaultAsync(t => t.ticketId == id);
+            .FirstOrDefaultAsync(t => t.TicketId == id);
     }
 
     public async Task<Ticket> CreateTicketAsync(Ticket ticket)
@@ -44,7 +44,7 @@ public class TicketRepo : ITicketRepo
     public async Task<List<Category>> GetCategoriesByIdsAsync(List<int> ids)
     {
         return await _context.Categories
-            .Where(c => ids.Contains(c.catId))
+            .Where(c => ids.Contains(c.CatId))
             .ToListAsync();
     }
 }

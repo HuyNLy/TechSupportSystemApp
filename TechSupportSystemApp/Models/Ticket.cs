@@ -5,14 +5,14 @@ namespace TechSupportSystemApp.Models;
 public class Ticket
 {
     [Key]
-    public int ticketId { get; set; }
+    public int TicketId { get; set; }
 
     [Required]
     [MaxLength(200)]
-    public string ticketTitle { get; set; } = string.Empty;
+    public string TicketTitle { get; set; } = string.Empty;
 
     [MaxLength(500)]
-    public string ticketDescription { get; set; } = string.Empty;
+    public string TicketDescription { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 

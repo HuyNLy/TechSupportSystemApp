@@ -37,7 +37,7 @@ public class TicketController : ControllerBase
     public async Task<IActionResult> Create(NewTicketDTO dto)
     {
         var created = await _service.CreateTicketAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = created.ticketId }, created);
+        return CreatedAtAction(nameof(GetById), new { id = created.TicketId }, created);
     }
 
     [HttpDelete("{id}")]

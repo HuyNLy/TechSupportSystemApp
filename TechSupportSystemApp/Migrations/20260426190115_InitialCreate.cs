@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace TechSupportSystemApp.Migrations
 {
     /// <inheritdoc />
@@ -15,47 +17,47 @@ namespace TechSupportSystemApp.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    CatId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    CatName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.CatId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    EId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    EName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.PrimaryKey("PK_Employees", x => x.EId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Tickets",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    TicketId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    TicketTitle = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    TicketDescription = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EmployeeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tickets", x => x.Id);
+                    table.PrimaryKey("PK_Tickets", x => x.TicketId);
                     table.ForeignKey(
                         name: "FK_Tickets_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
-                        principalColumn: "Id",
+                        principalColumn: "EId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -63,30 +65,48 @@ namespace TechSupportSystemApp.Migrations
                 name: "CategoryTicket",
                 columns: table => new
                 {
-                    CategoriesId = table.Column<int>(type: "int", nullable: false),
-                    TicketsId = table.Column<int>(type: "int", nullable: false)
+                    CategoriesCatId = table.Column<int>(type: "int", nullable: false),
+                    TicketsTicketId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryTicket", x => new { x.CategoriesId, x.TicketsId });
+                    table.PrimaryKey("PK_CategoryTicket", x => new { x.CategoriesCatId, x.TicketsTicketId });
                     table.ForeignKey(
-                        name: "FK_CategoryTicket_Categories_CategoriesId",
-                        column: x => x.CategoriesId,
+                        name: "FK_CategoryTicket_Categories_CategoriesCatId",
+                        column: x => x.CategoriesCatId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
+                        principalColumn: "CatId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CategoryTicket_Tickets_TicketsId",
-                        column: x => x.TicketsId,
+                        name: "FK_CategoryTicket_Tickets_TicketsTicketId",
+                        column: x => x.TicketsTicketId,
                         principalTable: "Tickets",
-                        principalColumn: "Id",
+                        principalColumn: "TicketId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CatId", "CatName" },
+                values: new object[,]
+                {
+                    { 1, "Hardware" },
+                    { 2, "Software" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Employees",
+                columns: new[] { "EId", "EName" },
+                values: new object[,]
+                {
+                    { 1, "Alice" },
+                    { 2, "Bob" }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryTicket_TicketsId",
+                name: "IX_CategoryTicket_TicketsTicketId",
                 table: "CategoryTicket",
-                column: "TicketsId");
+                column: "TicketsTicketId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_EmployeeId",
