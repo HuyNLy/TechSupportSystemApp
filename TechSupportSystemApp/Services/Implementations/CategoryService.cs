@@ -1,39 +1,40 @@
-using Microsoft.EntityFrameworkCore;
 using TechSupportSystemApp.Data;
 using TechSupportSystemApp.Models;
 using TechSupportSystemApp.Services.Interfaces;
+using TechSupportSystemApp.DTOs;
 
 namespace TechSupportSystemApp.Services.Implementations;
 
 public class CategoryService : ICategoryService
 {
-    private readonly AppDbContext _context;
+    private readonly ICategoryRepo _repo;
 
-    public CategoryService(AppDbContext context)
+    public CategoryService(ICategoryRepo repo)
     {
-        _context = context;
+        _repo = repo;
     }
 
     public async Task<IEnumerable<Category>> GetAllAsync()
-        => await _context.Categories.ToListAsync();
+        => await _repo.GetAllCategoriesAsync();
 
     public async Task<Category?> GetByIdAsync(int id)
-        => await _context.Categories.FindAsync(id);
+        => await _repo.GetCategoryByIdAsync(id);
 
-    public async Task<Category> CreateAsync(Category category)
+    public async Task<Category> CreateAsync(NewCategoryDTO dto)
     {
-        _context.Categories.Add(category);
-        await _context.SaveChangesAsync();
-        return category;
+        var category = new Category
+        {
+            CatName = dto.CatName
+        };
+        return await _repo.CreateCategoryAsync(category);
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category == null) return false;
+        var category = await _repo.GetCategoryByIdAsync(id);
+        if (category is null) return false;
 
-        _context.Categories.Remove(category);
-        await _context.SaveChangesAsync();
+        await _repo.DeleteCategoryAsync(category);
         return true;
     }
 }

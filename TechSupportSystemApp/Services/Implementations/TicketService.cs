@@ -1,6 +1,5 @@
 using TechSupportSystemApp.Data;
 using TechSupportSystemApp.DTOs;
-using TechSupportSystemApp.Models;
 using TechSupportSystemApp.Services.Interfaces;
 
 namespace TechSupportSystemApp.Services.Implementations;
@@ -14,31 +13,46 @@ public class TicketService : ITicketService
         _repo = repo;
     }
 
-    public async Task<List<Ticket>> GetAllTicketsAsync()
+    // Helper to avoid repeating the mapping in every method
+    private static TicketResponseDTO MapToDTO(Models.Ticket t) => new()
     {
-        return await _repo.GetAllTicketsAsync();
+        TicketId = t.TicketId,
+        TicketTitle = t.TicketTitle,
+        TicketDescription = t.TicketDescription,
+        CreatedAt = t.CreatedAt,
+        EmployeeName = t.Employee.EName,
+        Categories = t.Categories.Select(c => c.CatName).ToList()
+    };
+
+    public async Task<List<TicketResponseDTO>> GetAllTicketsAsync()
+    {
+        var tickets = await _repo.GetAllTicketsAsync();
+        return tickets.Select(MapToDTO).ToList();
     }
 
-    public async Task<Ticket?> GetTicketByIdAsync(int id)
+    public async Task<TicketResponseDTO?> GetTicketByIdAsync(int id)
     {
-        return await _repo.GetTicketByIdAsync(id);
+        var ticket = await _repo.GetTicketByIdAsync(id);
+        if (ticket is null) return null;
+        return MapToDTO(ticket);
     }
 
-    public async Task<Ticket> CreateTicketAsync(NewTicketDTO dto)
+    public async Task<TicketResponseDTO> CreateTicketAsync(NewTicketDTO dto)
     {
-        // Map DTO → Model (trainer style)
-        var ticket = new Ticket
+        var ticket = new Models.Ticket
         {
-            TicketTitle = dto.Title,
-            TicketDescription = dto.Description,
+            TicketTitle = dto.Title!,
+            TicketDescription = dto.Description ?? string.Empty,
             EmployeeId = dto.EmployeeId
         };
 
-        // Attach categories
-        ticket.Categories = await _repo.GetCategoriesByIdsAsync(dto.CategoryIds);
+        ticket.Categories = await _repo.GetCategoriesByIdsAsync(dto.CategoryIds!);
 
-        // Save
-        return await _repo.CreateTicketAsync(ticket);
+        var created = await _repo.CreateTicketAsync(ticket);
+
+        // Reload with includes so Employee + Categories are populated for mapping
+        var full = await _repo.GetTicketByIdAsync(created.TicketId);
+        return MapToDTO(full!);
     }
 
     public async Task DeleteTicketAsync(int id)
@@ -47,7 +61,6 @@ public class TicketService : ITicketService
             throw new ArgumentOutOfRangeException("ID must be greater than 0!");
 
         var ticket = await _repo.GetTicketByIdAsync(id);
-
         if (ticket is null)
             throw new KeyNotFoundException("This ticket doesn't exist.");
 

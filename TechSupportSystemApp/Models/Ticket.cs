@@ -14,12 +14,19 @@ public class Ticket
     [MaxLength(500)]
     public string TicketDescription { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Required because FK is non-nullable
+    public TicketStatus Status { get; set; } = TicketStatus.Open;
+
     public int EmployeeId { get; set; }
-    public Employee Employee { get; set; }
+    public Employee Employee { get; set; } = null!;
 
-    // M-M relationship 
     public List<Category> Categories { get; set; } = new();
+}
+
+// Just add it here at the bottom of the same file
+public enum TicketStatus
+{
+    Open,
+    Closed
 }

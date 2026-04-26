@@ -1,51 +1,47 @@
 using Microsoft.AspNetCore.Mvc;
-using TechSupportSystemApp.Data;
 using TechSupportSystemApp.Models;
-using Microsoft.EntityFrameworkCore;
-
+using TechSupportSystemApp.Services.Interfaces;
+using TechSupportSystemApp.DTOs;
 namespace TechSupportSystemApp.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class CategoryController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly ICategoryService _service;
 
-    public CategoryController(AppDbContext context)
+    public CategoryController(ICategoryService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+    public async Task<IActionResult> GetCategories()
     {
-        return await _context.Categories.ToListAsync();
+        var categories = await _service.GetAllAsync();
+        return Ok(categories);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Category>> GetCategory(int id)
+    public async Task<IActionResult> GetCategory(int id)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category == null) return NotFound();
-        return category;
+        var category = await _service.GetByIdAsync(id);
+        if (category is null) return NotFound();
+        return Ok(category);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Category>> CreateCategory(Category category)
+    public async Task<IActionResult> CreateCategory(NewCategoryDTO dto)
     {
-        _context.Categories.Add(category);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetCategory), new { id = category.CatId }, category);
+        var created = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetCategory), new { id = created.CatId }, created);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category == null) return NotFound();
-
-        _context.Categories.Remove(category);
-        await _context.SaveChangesAsync();
+        var deleted = await _service.DeleteAsync(id);
+        if (!deleted) return NotFound();
         return NoContent();
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using TechSupportSystemApp.Data;
 using TechSupportSystemApp.Models;
-using Microsoft.EntityFrameworkCore;
+using TechSupportSystemApp.Services.Interfaces;
+using TechSupportSystemApp.DTOs;
 
 namespace TechSupportSystemApp.Controllers;
 
@@ -9,43 +9,41 @@ namespace TechSupportSystemApp.Controllers;
 [Route("api/[controller]")]
 public class EmployeeController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IEmployeeService _service;
 
-    public EmployeeController(AppDbContext context)
+    public EmployeeController(IEmployeeService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+    public async Task<IActionResult> GetEmployees()
     {
-        return await _context.Employees.ToListAsync();
+        var employees = await _service.GetAllAsync();
+        return Ok(employees);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Employee>> GetEmployee(int id)
+    public async Task<IActionResult> GetEmployee(int id)
     {
-        var employee = await _context.Employees.FindAsync(id);
-        if (employee == null) return NotFound();
-        return employee;
+        var employee = await _service.GetByIdAsync(id);
+        if (employee is null) return NotFound();
+        return Ok(employee);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Employee>> CreateEmployee(Employee employee)
+    [HttpPost]
+    public async Task<IActionResult> CreateEmployee(NewEmployeeDTO dto)
     {
-        _context.Employees.Add(employee);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetEmployee), new { id = employee.EId }, employee);
+        var created = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetEmployee), new { id = created.EId }, created);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(int id)
     {
-        var employee = await _context.Employees.FindAsync(id);
-        if (employee == null) return NotFound();
-
-        _context.Employees.Remove(employee);
-        await _context.SaveChangesAsync();
+        var deleted = await _service.DeleteAsync(id);
+        if (!deleted) return NotFound();
         return NoContent();
     }
 }
