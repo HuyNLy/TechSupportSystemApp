@@ -13,10 +13,14 @@ public class EmployeeRepo : IEmployeeRepo
     }
 
     public async Task<List<Employee>> GetAllEmployeesAsync()
-        => await _context.Employees.ToListAsync();
+        => await _context.Employees
+            .Include(e => e.Tickets)
+            .ToListAsync();
 
     public async Task<Employee?> GetEmployeeByIdAsync(int id)
-        => await _context.Employees.FindAsync(id);
+        => await _context.Employees
+            .Include(e => e.Tickets)
+            .FirstOrDefaultAsync(e => e.EId == id);
 
     public async Task<Employee> CreateEmployeeAsync(Employee employee)
     {

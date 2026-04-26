@@ -47,5 +47,16 @@ public class TicketRepo : ITicketRepo
             .Where(c => ids.Contains(c.CatId))
             .ToListAsync();
     }
-}
+    public async Task<List<Ticket>> GetTicketsByStatusAsync(TicketStatus status)
+    => await _context.Tickets
+        .Include(t => t.Employee)
+        .Include(t => t.Categories)
+        .Where(t => t.Status == status)
+        .ToListAsync();
+
+    public async Task UpdateTicketAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
+    }
     

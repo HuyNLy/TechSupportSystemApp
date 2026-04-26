@@ -1,7 +1,7 @@
 using TechSupportSystemApp.Data;
+using TechSupportSystemApp.DTOs;
 using TechSupportSystemApp.Models;
 using TechSupportSystemApp.Services.Interfaces;
-using TechSupportSystemApp.DTOs;
 
 namespace TechSupportSystemApp.Services.Implementations;
 
@@ -14,26 +14,34 @@ public class EmployeeService : IEmployeeService
         _repo = repo;
     }
 
-    public async Task<IEnumerable<Employee>> GetAllAsync()
-        => await _repo.GetAllEmployeesAsync();
-
-    public async Task<Employee?> GetByIdAsync(int id)
-        => await _repo.GetEmployeeByIdAsync(id);
-
-    public async Task<Employee> CreateAsync(NewEmployeeDTO dto)
+    private static EmployeeResponseDTO MapToDTO(Employee e) => new()
     {
-        var employee = new Employee
-        {
-            EName = dto.EName
-        };
-        return await _repo.CreateEmployeeAsync(employee);
+        EId = e.EId,
+        EName = e.EName,
+        Tickets = e.Tickets.Select(t => t.TicketTitle).ToList()
+    };
+
+    public async Task<IEnumerable<EmployeeResponseDTO>> GetAllAsync()
+        => (await _repo.GetAllEmployeesAsync()).Select(MapToDTO);
+
+    public async Task<EmployeeResponseDTO?> GetByIdAsync(int id)
+    {
+        var employee = await _repo.GetEmployeeByIdAsync(id);
+        if (employee is null) return null;
+        return MapToDTO(employee);
+    }
+
+    public async Task<EmployeeResponseDTO> CreateAsync(NewEmployeeDTO dto)
+    {
+        var employee = new Employee { EName = dto.EName };
+        var created = await _repo.CreateEmployeeAsync(employee);
+        return MapToDTO(created);
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
         var employee = await _repo.GetEmployeeByIdAsync(id);
         if (employee is null) return false;
-
         await _repo.DeleteEmployeeAsync(employee);
         return true;
     }

@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using TechSupportSystemApp.DTOs;
 using TechSupportSystemApp.Models;
 using TechSupportSystemApp.Services.Interfaces;
-using TechSupportSystemApp.DTOs;
+
 namespace TechSupportSystemApp.Controllers;
 
 [ApiController]
@@ -17,10 +18,7 @@ public class CategoryController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetCategories()
-    {
-        var categories = await _service.GetAllAsync();
-        return Ok(categories);
-    }
+        => Ok(await _service.GetAllAsync());
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCategory(int id)
@@ -31,9 +29,9 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCategory(NewCategoryDTO dto)
+    public async Task<IActionResult> CreateCategory(Category category)
     {
-        var created = await _service.CreateAsync(dto);
+        var created = await _service.CreateAsync(category);
         return CreatedAtAction(nameof(GetCategory), new { id = created.CatId }, created);
     }
 

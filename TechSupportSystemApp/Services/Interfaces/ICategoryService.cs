@@ -1,12 +1,12 @@
-using TechSupportSystemApp.Models;
 using TechSupportSystemApp.DTOs;
+using TechSupportSystemApp.Models;
 
 namespace TechSupportSystemApp.Services.Interfaces;
 
 public interface ICategoryService
 {
-    Task<IEnumerable<Category>> GetAllAsync();
-    Task<Category?> GetByIdAsync(int id);
-    Task<Category> CreateAsync(NewCategoryDTO dto);
+    Task<IEnumerable<CategoryResponseDTO>> GetAllAsync();
+    Task<CategoryResponseDTO?> GetByIdAsync(int id);
+    Task<CategoryResponseDTO> CreateAsync(Category category);
     Task<bool> DeleteAsync(int id);
 }

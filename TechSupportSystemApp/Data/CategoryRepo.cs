@@ -13,10 +13,14 @@ public class CategoryRepo : ICategoryRepo
     }
 
     public async Task<List<Category>> GetAllCategoriesAsync()
-        => await _context.Categories.ToListAsync();
+        => await _context.Categories
+            .Include(c => c.Tickets)
+            .ToListAsync();
 
     public async Task<Category?> GetCategoryByIdAsync(int id)
-        => await _context.Categories.FindAsync(id);
+        => await _context.Categories
+            .Include(c => c.Tickets)
+            .FirstOrDefaultAsync(c => c.CatId == id);
 
     public async Task<Category> CreateCategoryAsync(Category category)
     {

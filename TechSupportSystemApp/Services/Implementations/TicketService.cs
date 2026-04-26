@@ -1,6 +1,7 @@
 using TechSupportSystemApp.Data;
 using TechSupportSystemApp.DTOs;
 using TechSupportSystemApp.Services.Interfaces;
+using TechSupportSystemApp.Models;
 
 namespace TechSupportSystemApp.Services.Implementations;
 
@@ -14,12 +15,13 @@ public class TicketService : ITicketService
     }
 
     // Helper to avoid repeating the mapping in every method
-    private static TicketResponseDTO MapToDTO(Models.Ticket t) => new()
+    private static TicketResponseDTO MapToDTO(Ticket t) => new()
     {
         TicketId = t.TicketId,
         TicketTitle = t.TicketTitle,
         TicketDescription = t.TicketDescription,
         CreatedAt = t.CreatedAt,
+        Status = t.Status,
         EmployeeName = t.Employee.EName,
         Categories = t.Categories.Select(c => c.CatName).ToList()
     };
@@ -39,7 +41,7 @@ public class TicketService : ITicketService
 
     public async Task<TicketResponseDTO> CreateTicketAsync(NewTicketDTO dto)
     {
-        var ticket = new Models.Ticket
+        var ticket = new Ticket
         {
             TicketTitle = dto.Title!,
             TicketDescription = dto.Description ?? string.Empty,
@@ -53,6 +55,25 @@ public class TicketService : ITicketService
         // Reload with includes so Employee + Categories are populated for mapping
         var full = await _repo.GetTicketByIdAsync(created.TicketId);
         return MapToDTO(full!);
+    }
+
+    public async Task<List<TicketResponseDTO>> GetTicketsByStatusAsync(TicketStatus status)
+    {
+        var tickets = await _repo.GetTicketsByStatusAsync(status);
+        return tickets.Select(MapToDTO).ToList();
+    }
+
+    public async Task UpdateTicketAsync(int id, UpdateTicketDTO dto)
+    {
+        var ticket = await _repo.GetTicketByIdAsync(id);
+        if (ticket is null)
+            throw new KeyNotFoundException($"Ticket {id} not found.");
+
+        if (dto.TicketTitle is not null) ticket.TicketTitle = dto.TicketTitle;
+        if (dto.TicketDescription is not null) ticket.TicketDescription = dto.TicketDescription;
+        if (dto.Status is not null) ticket.Status = dto.Status.Value;
+
+        await _repo.UpdateTicketAsync();
     }
 
     public async Task DeleteTicketAsync(int id)

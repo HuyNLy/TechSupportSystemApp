@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using TechSupportSystemApp.Models;
-using TechSupportSystemApp.Services.Interfaces;
 using TechSupportSystemApp.DTOs;
+using TechSupportSystemApp.Services.Interfaces;
 
 namespace TechSupportSystemApp.Controllers;
 
@@ -18,10 +17,7 @@ public class EmployeeController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetEmployees()
-    {
-        var employees = await _service.GetAllAsync();
-        return Ok(employees);
-    }
+        => Ok(await _service.GetAllAsync());
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEmployee(int id)
@@ -31,7 +27,6 @@ public class EmployeeController : ControllerBase
         return Ok(employee);
     }
 
-    [HttpPost]
     [HttpPost]
     public async Task<IActionResult> CreateEmployee(NewEmployeeDTO dto)
     {
