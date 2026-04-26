@@ -12,6 +12,18 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register services
+builder.Services.AddScoped<TechSupportSystemApp.Services.Interfaces.IEmployeeService, TechSupportSystemApp
+.Services.Implementations.EmployeeService>();
+builder.Services.AddScoped<TechSupportSystemApp.Services.Interfaces.ITicketService, TechSupportSystemApp
+.Services.Implementations.TicketService>();
+builder.Services.AddScoped<TechSupportSystemApp.Services.Interfaces.ICategoryService, TechSupportSystemApp
+.Services.Implementations.CategoryService>();
+
+builder.Services.AddScoped<ITicketRepo, TicketRepo>();
+
+
+
 
 var app = builder.Build();
 

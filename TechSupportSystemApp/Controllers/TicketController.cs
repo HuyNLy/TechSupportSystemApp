@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using TechSupportSystemApp.Data;
-using TechSupportSystemApp.Models;
-using Microsoft.EntityFrameworkCore;
+using TechSupportSystemApp.DTOs;
+using TechSupportSystemApp.Services.Interfaces;
 
 namespace TechSupportSystemApp.Controllers;
 
@@ -9,62 +8,42 @@ namespace TechSupportSystemApp.Controllers;
 [Route("api/[controller]")]
 public class TicketController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly ITicketService _service;
 
-    public TicketController(AppDbContext context)
+    public TicketController(ITicketService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
+    public async Task<IActionResult> GetAll()
     {
-        return await _context.Tickets
-            .Include(t => t.Employee)
-            .Include(t => t.Categories)
-            .ToListAsync();
+        var tickets = await _service.GetAllTicketsAsync();
+        return Ok(tickets);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Ticket>> GetTicket(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var ticket = await _context.Tickets
-            .Include(t => t.Employee)
-            .Include(t => t.Categories)
-            .FirstOrDefaultAsync(t => t.Id == id);
+        var ticket = await _service.GetTicketByIdAsync(id);
 
-        if (ticket == null) return NotFound();
-        return ticket;
+        if (ticket is null)
+            return NotFound();
+
+        return Ok(ticket);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Ticket>> CreateTicket(Ticket ticket)
+    public async Task<IActionResult> Create(NewTicketDTO dto)
     {
-        // Attach existing categories (M-M)
-        if (ticket.Categories != null && ticket.Categories.Count > 0)
-        {
-            var categoryIds = ticket.Categories.Select(c => c.Id).ToList();
-            var categories = await _context.Categories
-                .Where(c => categoryIds.Contains(c.Id))
-                .ToListAsync();
-
-            ticket.Categories = categories;
-        }
-
-        _context.Tickets.Add(ticket);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetTicket), new { id = ticket.Id }, ticket);
+        var created = await _service.CreateTicketAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTicket(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var ticket = await _context.Tickets.FindAsync(id);
-        if (ticket == null) return NotFound();
-
-        _context.Tickets.Remove(ticket);
-        await _context.SaveChangesAsync();
+        await _service.DeleteTicketAsync(id);
         return NoContent();
     }
 }
