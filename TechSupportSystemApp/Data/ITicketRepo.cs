@@ -6,6 +6,7 @@ public interface ITicketRepo
 {
     Task<List<Ticket>> GetAllTicketsAsync();
     Task<List<Ticket>> GetTicketsByStatusAsync(TicketStatus status);
+    Task<List<Ticket>> GetTicketsByPriorityAsync(TicketPriority priority);
     Task<Ticket?> GetTicketByIdAsync(int id);
     Task<Ticket> CreateTicketAsync(Ticket ticket);
     Task UpdateTicketAsync();

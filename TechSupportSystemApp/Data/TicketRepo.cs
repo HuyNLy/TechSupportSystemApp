@@ -58,5 +58,12 @@ public class TicketRepo : ITicketRepo
     {
         await _context.SaveChangesAsync();
     }
-    }
+
+    public async Task<List<Ticket>> GetTicketsByPriorityAsync(TicketPriority priority)
+    => await _context.Tickets
+        .Include(t => t.Employee)
+        .Include(t => t.Categories)
+        .Where(t => t.Priority == priority)
+        .ToListAsync();
+}
     

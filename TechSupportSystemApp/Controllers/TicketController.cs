@@ -24,6 +24,11 @@ public class TicketController : ControllerBase
     public async Task<IActionResult> GetByStatus(TicketStatus status)
         => Ok(await _service.GetTicketsByStatusAsync(status));
 
+        
+    [HttpGet("priority/{priority}")]
+    public async Task<IActionResult> GetByPriority(TicketPriority priority)
+        => Ok(await _service.GetTicketsByPriorityAsync(priority));
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {

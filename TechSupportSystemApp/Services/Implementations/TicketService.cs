@@ -22,6 +22,7 @@ public class TicketService : ITicketService
         TicketDescription = t.TicketDescription,
         CreatedAt = t.CreatedAt,
         Status = t.Status,
+        Priority = t.Priority,
         EmployeeName = t.Employee.EName,
         Categories = t.Categories.Select(c => c.CatName).ToList()
     };
@@ -45,6 +46,7 @@ public class TicketService : ITicketService
         {
             TicketTitle = dto.Title!,
             TicketDescription = dto.Description ?? string.Empty,
+            Priority = dto.Priority,
             EmployeeId = dto.EmployeeId
         };
 
@@ -63,6 +65,12 @@ public class TicketService : ITicketService
         return tickets.Select(MapToDTO).ToList();
     }
 
+    public async Task<List<TicketResponseDTO>> GetTicketsByPriorityAsync(TicketPriority priority)
+    {
+        var tickets = await _repo.GetTicketsByPriorityAsync(priority);
+        return tickets.Select(MapToDTO).ToList();
+    }
+
     public async Task UpdateTicketAsync(int id, UpdateTicketDTO dto)
     {
         var ticket = await _repo.GetTicketByIdAsync(id);
@@ -71,6 +79,7 @@ public class TicketService : ITicketService
 
         if (dto.TicketTitle is not null) ticket.TicketTitle = dto.TicketTitle;
         if (dto.TicketDescription is not null) ticket.TicketDescription = dto.TicketDescription;
+        if (dto.Priority is not null) ticket.Priority = dto.Priority.Value;
         if (dto.Status is not null) ticket.Status = dto.Status.Value;
 
         await _repo.UpdateTicketAsync();

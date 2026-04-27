@@ -14,6 +14,8 @@ public class Ticket
     [MaxLength(500)]
     public string TicketDescription { get; set; } = string.Empty;
 
+    public TicketPriority Priority { get; set; } = TicketPriority.Low;
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public TicketStatus Status { get; set; } = TicketStatus.Open;
@@ -29,4 +31,10 @@ public enum TicketStatus
 {
     Open,
     Closed
+}
+public enum TicketPriority
+{
+    Low,
+    Medium,
+    High
 }
